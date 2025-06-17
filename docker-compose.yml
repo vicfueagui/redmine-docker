@@ -31,5 +31,5 @@ services:
       REDMINE_DB_DATABASE: redmine
     # contraseña la toma de REDMINE_DB_PASSWORD desde .env
     volumes:
-    - ./redmine-config:/usr/src/redmine/config
-      - ./redmine-files:/usr/src/redmine/files
+    - ./redmine-config/configuration.yml:/usr/src/redmine/config/configuration.yml:ro
+    - ./redmine-files:/usr/src/redmine/files
