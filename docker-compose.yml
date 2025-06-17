@@ -1,0 +1,35 @@
+# docker-compose.yml
+version: "3"
+
+services:
+  db:
+    image: postgres:14
+    container_name: redmine_postgres
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: redmine
+      POSTGRES_DB: redmine
+    # contraseña la toma de POSTGRES_PASSWORD desde .env
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+
+  redmine:
+    image: redmine:latest
+    container_name: redmine_web
+    depends_on:
+      - db
+    restart: always
+    ports:
+      - "${REDMINE_HOST_PORT:-3100}:3000"
+    env_file:
+      - .env
+    environment:
+      REDMINE_DB_POSTGRES: db
+      REDMINE_DB_USERNAME: redmine
+      REDMINE_DB_DATABASE: redmine
+    # contraseña la toma de REDMINE_DB_PASSWORD desde .env
+    volumes:
+    - ./redmine-config:/usr/src/redmine/config
+      - ./redmine-files:/usr/src/redmine/files
