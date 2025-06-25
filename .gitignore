@@ -1,0 +1,22 @@
+# Datos de PostgreSQL
+/postgres-data/
+/postgres-data-6x/
+
+# Archivos adjuntos de Redmine
+/redmine-files/
+/redmine-files-6x/
+
+# Archivos de configuración local
+.env
+Gemfile.custom.lock
+
+# Backups
+/backups/
+
+# Carpetas de temas y plugins (ya que se instalan manualmente)
+/plugins/*
+!/plugins/.keep
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db

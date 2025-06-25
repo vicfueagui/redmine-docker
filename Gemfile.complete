@@ -1,0 +1,30 @@
+source 'https://rubygems.org'
+
+ruby '>= 2.7.0', '< 3.3.0'
+gem 'webrick', '~> 1.8'   # solución rápida
+gem 'rails', '6.1.7.10'
+gem 'rouge', '~> 4.2.0'
+gem 'request_store', '~> 1.5.0'
+gem 'mini_mime', '~> 1.1.0'
+gem "actionpack-xml_parser"
+gem 'roadie-rails', '~> 3.1.0'
+gem 'marcel'
+gem 'mail', '~> 2.8.1'
+gem 'nokogiri', Gem.ruby_version >= Gem::Version.new('3.1') ? '1.18.3' : '~> 1.15.7'
+gem 'i18n', '~> 1.14.1'
+gem 'rbpdf', '~> 1.21.3'
+gem 'addressable'
+gem 'rubyzip', '~> 2.3.0'
+
+# Ruby Standard Gems
+gem 'csv', '~> 3.2.6'
+gem 'net-imap', '~> 0.3.4'
+gem 'net-pop', '~> 0.1.2'
+gem 'net-smtp', '~> 0.3.3'
+gem 'rexml', require: false if Gem.ruby_version >= Gem::Version.new('3.0')
+
+# Database adapter
+gem 'pg', '~> 1.5.3'
+
+# Redmineup gem - versión requerida por redmine_agile
+gem 'redmineup', '~> 1.0.10', '>= 1.0.10', require: 'redmineup'

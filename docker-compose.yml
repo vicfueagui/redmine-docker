@@ -1,35 +1,50 @@
-# docker-compose.yml
-version: "3"
+version: '3.8'
 
 services:
   db:
     image: postgres:14
     container_name: redmine_postgres
     restart: always
-    env_file:
-      - .env
     environment:
-      POSTGRES_USER: redmine
-      POSTGRES_DB: redmine
-    # contraseña la toma de POSTGRES_PASSWORD desde .env
+      POSTGRES_USER: ${POSTGRES_USER:-redmine}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-redmine}
+      POSTGRES_DB: ${POSTGRES_DB:-redmine}
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-redmine} -d ${POSTGRES_DB:-redmine}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   redmine:
-    image: redmine:latest
+    image: redmine:5.1.8-bookworm
     container_name: redmine_web
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     restart: always
     ports:
-      - "${REDMINE_HOST_PORT:-3100}:3000"
-    env_file:
-      - .env
+      - "0.0.0.0:3100:3000"
     environment:
-      REDMINE_DB_POSTGRES: db
-      REDMINE_DB_USERNAME: redmine
-      REDMINE_DB_DATABASE: redmine
-    # contraseña la toma de REDMINE_DB_PASSWORD desde .env
+      - REDMINE_DB_POSTGRES=db
+      - REDMINE_DB_USERNAME=${POSTGRES_USER:-redmine}
+      - REDMINE_DB_PASSWORD=${POSTGRES_PASSWORD:-redmine}
+      - REDMINE_DB_DATABASE=${POSTGRES_DB:-redmine}
+      - SECRET_KEY_BASE=29dd636bf601da1ed0bbedcbfce235fff63f47e298f8d92bc8382c1930753832b4d3c38fe8fc5adf16ea11442e6ee144a05e6492e52252c1c63e8dfeaa3c2bf5
+      - RAILS_ENV=production
+      - BUNDLE_WITHOUT=development:test
     volumes:
-    - ./redmine-config/configuration.yml:/usr/src/redmine/config/configuration.yml:ro
-    - ./redmine-files:/usr/src/redmine/files
+      - redmine_files:/usr/src/redmine/files
+      - ./plugins/redmine_agile:/usr/src/redmine/plugins/redmine_agile
+      - ./themes/purplemine2:/usr/src/redmine/public/themes/purplemine2
+      - ./redmine-config/configuration.yml:/usr/src/redmine/config/configuration.yml:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  postgres_data:
+  redmine_files:
