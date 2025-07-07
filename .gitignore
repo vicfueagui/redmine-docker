@@ -20,3 +20,7 @@ Gemfile.custom.lock
 # Archivos del sistema
 .DS_Store
 Thumbs.db
+
+# Backups de la BD
+postgres-backup/
+files-backup/
